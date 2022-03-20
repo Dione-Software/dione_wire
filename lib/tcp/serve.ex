@@ -1,5 +1,9 @@
 defmodule TcpAcceptor.Serve do
   def serve(socket) do
+    address(socket)
+    |> address_to_string()
+    |> insert_connection()
+
     socket
     |> read_line
     |> handle_socket_error_read(socket)
@@ -8,6 +12,24 @@ defmodule TcpAcceptor.Serve do
     |> write_line(socket)
     |> handle_socket_error_write(socket)
     serve(socket)
+  end
+
+  defp address(socket) do
+    {:ok, {address, _}} = :inet.peername(socket)
+    address
+  end
+
+  defp address_to_string({a, b, c, d}) do
+    "#{a}:#{b}:#{c}:#{d}"
+  end
+
+  defp address_to_string({a, b, c, d, e, f, g, h}) do
+    "#{a}:#{b}:#{c}:#{d}:#{e}:#{f}:#{g}:#{h}"
+  end
+
+  defp insert_connection(address) do
+    %DioneWire.Schema{address: address}
+    |> DioneWire.Repo.insert!()
   end
 
   defp read_line(socket) do
@@ -47,6 +69,11 @@ defmodule TcpAcceptor.Serve do
   defp handle_request("current") do
     count = AccessesCounter.current
     "Count => #{count}\n"
+  end
+
+  defp handle_request("location") do
+    {longitude, latitude} = DioneConfig.Provider.location
+    "Longitude => #{longitude} Latitude => #{latitude}\n"
   end
 
   defp handle_request(data) do

@@ -10,6 +10,12 @@ defmodule MyRouter do
     send_resp(conn, 200, "you are here")
   end
 
+  get "/location" do
+    AccessesCounter.increment()
+    {longitude, latitude} = DioneConfig.Provider.location
+    send_resp(conn, 200, "Longitude => #{longitude} Latitude => #{latitude}\n")
+  end
+
   get "/counter" do
     # counter = GenServer.call(MyAccessCounter, :current)
     counter = AccessesCounter.current()

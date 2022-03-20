@@ -11,6 +11,8 @@ defmodule DioneWire.Application do
       # Starts a worker by calling: DioneWire.Worker.start_link(arg)
       # {DioneWire.Worker, arg}
       {AccessesCounter, 0},
+      {DioneWire.Repo, []},
+      DioneConfig.Provider,
       {Plug.Cowboy, scheme: :http, plug: MyRouter, options: [port: 4001]},
       {Task.Supervisor, name: TcpAcceptor.ClientSupervisor},
       {Task, fn -> TcpAcceptor.Acceptor.accept(4040) end}
