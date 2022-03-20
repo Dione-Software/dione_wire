@@ -1,3 +1,4 @@
+![Lines of Code](https://sloc.xyz/github/Dione-Software/dione_wire)
 # DioneWire
 
 **TODO: Add description**
